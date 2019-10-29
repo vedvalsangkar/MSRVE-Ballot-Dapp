@@ -1,0 +1,23 @@
+{
+  "name": "msrve-ballot",
+  "version": "1.0.0",
+  "description": "MSRVE Ballout Dapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp.git"
+  },
+  "keywords": [
+    "blockchain",
+    "CSE526"
+  ],
+  "author": "Ved Harish Valsangkar, Smrati Kushwah",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp/issues"
+  },
+  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme"
+}

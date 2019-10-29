@@ -1,0 +1,23 @@
+{
+  "name": "msrve-ballot-contract",
+  "version": "1.0.0",
+  "description": "MSRVE Ballout Dapp",
+  "main": "index.js",
+  "keywords": [
+    "blockchain",
+    "CSE526"
+  ],
+  "conrtibutors": [
+    "Ved Harish Valsangkar <vedharis@buffalo.edu>",
+    "Smrati Kushwah <smratiku@buffalo.edu>"
+  ],
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp/issues"
+  },
+  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme",
+  "dependencies": {
+    "ganache-cli": "^6.7.0",
+    "truffle": "^5.0.42"
+  }
+}
