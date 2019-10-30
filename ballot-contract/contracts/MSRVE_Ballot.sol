@@ -36,11 +36,13 @@ contract MSRVE_Ballot {
 
     Phase public state;
 
-    modifier validPhase(Phase reqPhase) { require(state <= reqPhase, "Phase is invalid. Contact admin."); _; }
+    modifier validPhase(Phase reqPhase) {require(state <= reqPhase, "Phase is invalid. Contact admin."); _;}
 
-    modifier onlyAdmin() { require(msg.sender == admin, "YOU. SHALL. NOT. PASS!"); _; }
+    modifier onlyAdmin() {require(msg.sender == admin, "YOU. SHALL. NOT. PASS!"); _;}
 
-    modifier canVote() { require(voters[msg.sender].voted == false, "Access denied!"); _; }
+    modifier canVote() {require(voters[msg.sender].voted == false, "Access denied!"); _;}
+
+    event LogEval(bytes32 message, uint256 amount);
 
     constructor (uint8 num) public  {
 
@@ -125,6 +127,8 @@ contract MSRVE_Ballot {
         if(calc)
             return winner;
 
+        emit LogEval("START-OF-CALC", 0);
+
         for(uint8 recur = 0; recur < numProposals-1; recur += 1){
             // Loop should have a solution in numProposals-1 iterations.
             // While loop here could cause infinite loop.
@@ -136,15 +140,19 @@ contract MSRVE_Ballot {
 
             for(uint8 i = 0; i < numProposals; i += 1){
 
-                if(proposals.length == 0)
+                if(proposals.length == 0) {
+                    emit LogEval("EMPTY-PROP", i);
                     continue;
+                }
 
                 if(max<proposals[i].length){
                     max = proposals[i].length;
+                    emit LogEval("NEW-MAX", i);
                     win = i;
                 }
                 if(min>proposals[i].length){
                     min = proposals[i].length;
+                    emit LogEval("NEW-MIN", i);
                     lose = i;
                 }
             }
@@ -152,29 +160,35 @@ contract MSRVE_Ballot {
             if(proposals[win].length>voteCount/2){
                 // winningProposal = win;
                 // break;
+                emit LogEval("CHICKEN-DINNER", win);
                 winner = win;
                 calc = true;
                 return win+1;
             }
             else {
+                emit LogEval("TIE-BREAKER", lose);
                 Proposal[] memory deleteStack = proposals[lose];
                 for(uint8 j = 0; j < deleteStack.length; j = 1) {
+
                     // Proposal memory tmp = deleteStack[j];
                     // _rankVote = bytes(deleteStack[j].vote);
+
                     _rankVote = deleteStack[j].vote;
                     uint256 change = _rankVote[_rankVote.length - 1];
                     delete _rankVote[_rankVote.length - 1];
                     _rankVote.length = _rankVote.length - 1;
                     proposals[change].push(Proposal(_rankVote));
+
                     // byte change = tmp.vote[tmp.vote.length - 1];
                     // delete tmp.vote[tmp.vote.length - 1];
                     // tmp.vote.length -= 1;
+
                 }
                 delete proposals[lose];
             }
 
         }
-
+        emit LogEval("THIS-IS-THE-END", winner);
         return winner;
         // return win;
         // winningProposal = 0;

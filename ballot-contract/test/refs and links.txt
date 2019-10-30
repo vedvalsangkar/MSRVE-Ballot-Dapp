@@ -1,0 +1,2 @@
+https://ethereum.stackexchange.com/questions/36549/how-to-run-a-multiline-script-in-truffle-console
+https://www.trufflesuite.com/tutorials/pet-shop
