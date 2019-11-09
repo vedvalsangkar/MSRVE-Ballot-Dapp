@@ -19,6 +19,7 @@ var admin;
 var accounts;
 var ballot;
 
+//pre-processing before every test case
 beforeEach(async () => {
     accounts = await web3.eth.getAccounts();
     admin = accounts[9];
@@ -28,12 +29,14 @@ beforeEach(async () => {
         // .send({ from: admin});
 });
 
+//grouping testcases together
 describe('Maine State Ranked Voting Election', () => {
 
     describe('Preliminaries', () => {
         // it('<test_name>', async () => {'<func>'});
 
         describe('State', () => {
+            //testcase
             it('Init State (Registration)', async () => {
                 state = await ballot.methods.state().call();
                 assert.equal(state, 0, 'Init state = 0');
@@ -56,11 +59,12 @@ describe('Maine State Ranked Voting Election', () => {
                     await ballot.methods.changeState(1).send({from:accounts[0]});
                     assert.fail('Change should have failed!');
                 } catch (err) {
-                    assert.ok(err, 'Error captured Successfully!');
+                    assert.ok(err, 'Error captured Successfully!'); //passed
                 }
             });
         });
-
+        
+        //test for user registration if they can register
         describe('Registration', ()=>{
             it('Register (Multiple)', async () => {
                 state = await ballot.methods.state().call();
@@ -246,7 +250,7 @@ describe('Maine State Ranked Voting Election', () => {
 
             try {
                 let pre_vote = await ballot.methods.voteCount().call();
-                
+                //rightmost is highest priority
                 await ballot.methods.vote([2, 1, 0, 3]).send({from:accounts[0], gas: '6721975'});
                 await ballot.methods.vote([0, 3, 1, 2]).send({from:accounts[1], gas: '6721975'});
                 await ballot.methods.vote([3, 2, 1, 0]).send({from:accounts[2], gas: '6721975'});

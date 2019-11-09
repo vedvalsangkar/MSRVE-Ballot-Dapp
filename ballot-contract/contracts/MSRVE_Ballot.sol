@@ -5,21 +5,21 @@ contract MSRVE_Ballot {
     struct Voter {
         uint weight;
         bool voted;
-        uint256[] vote;
-        uint256[] curList;
-        uint256 preference;
+        uint256[] vote; //ranked vote
+        uint256[] curList; //updated temp list of calculating final votes
+        uint256 preference; //your first prefrnc
         address delegate;
     }
 
     address admin;
     address[] voterList;
-    uint256 numProposals;
+    uint256 numProposals; //candidates to be voted for
     uint256[] runningCount;
-    bool[] invalidCandidates;
+    bool[] invalidCandidates; //to Remove Loosers
     mapping(address => Voter) voters;
 
-    uint public voteCount;
-    uint public abstainCount;
+    uint public voteCount; //how many ppl have voted
+    uint public abstainCount; //number of people abstained
 
     uint256 public winner;
     bool calc;
@@ -60,38 +60,39 @@ contract MSRVE_Ballot {
     function vote(uint256[] memory inputArray) public canVote validPhase(Phase.Vote) {
 
         require(voters[msg.sender].weight > 0, "Register first!");
-
+        //running count of given index should be incremented by weight(for now 1)
         runningCount[inputArray[inputArray.length-1]] += voters[msg.sender].weight;
 
         voters[msg.sender].preference = inputArray[inputArray.length-1];
-        voters[msg.sender].vote = inputArray;
+        voters[msg.sender].vote = inputArray; //initial vote prefrnc of voter
         voters[msg.sender].curList = inputArray;
         voters[msg.sender].curList.pop();
         voters[msg.sender].voted = true;
         voterList.push(msg.sender);
-
         voteCount++;
 
     }
 
-    function delegatedTo(address to) public canVote validPhase(Phase.Vote) {
+    function delegatedTo(address To) public canVote validPhase(Phase.Vote) {
 
-        require(to != msg.sender, "Don't delegate to self.");
+        require(To != msg.sender, "Don't delegate to self.");
+
+        address to = To;
 
         Voter storage sender = voters[msg.sender]; // assigns reference
-
+        //chain reaction
         while (voters[to].delegate != address(0) && voters[to].delegate != msg.sender)
             to = voters[to].delegate;
-
+        //no round robin
         if (to == msg.sender)
-            revert("Delegation DAG");
+            revert("Delegation DCG");
 
         sender.voted = true;
         sender.delegate = to;
-        Voter storage delegateTo = voters[to];
+        Voter storage dTo = voters[to];
 
-        if (!delegateTo.voted)
-            delegateTo.weight += sender.weight;
+        if (!dTo.voted)
+            dTo.weight += sender.weight;
         else
             revert("New person already voted!");
     }
@@ -113,10 +114,10 @@ contract MSRVE_Ballot {
             // Loop should have a solution in numProposals-1 iterations.
             // While loop here could cause infinite loop.
 
-            uint256 max = 0;
-            uint256 min = 2**10;
-            uint256 win = numProposals;
-            uint256 lose = 0;
+            uint256 max = 0; //max votes right now in the array- for current leading candidate
+            uint256 min = 2**10; //min votes right now- for knockout candidate
+            uint256 win = numProposals; //one with max
+            uint256 lose = 0; //one with min
 
             for(uint8 i = 0; i < numProposals; i += 1){
                 if(max<runningCount[i]) {
@@ -138,6 +139,7 @@ contract MSRVE_Ballot {
                 invalidCandidates[lose] = true;
                 runningCount[lose] = 0;
                 for(uint8 j = 0; j < voterList.length; j += 1) {
+                    //if your candidate is now out we need your next preference
                     if(voters[voterList[j]].preference == lose){
                         // recalc
                         voters[voterList[j]].preference = voters[voterList[j]].curList[voters[voterList[j]].curList.length-1];
