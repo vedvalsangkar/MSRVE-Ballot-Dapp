@@ -142,6 +142,7 @@ iframe {
 .limiter {
   width: 100%;
   margin: 0 auto;
+ 
 }
 
 .container-login100 {
@@ -152,8 +153,9 @@ iframe {
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   padding: 15px;
 
@@ -191,7 +193,7 @@ iframe {
 .login100-form {
   width: 100%;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: rgb(248, 241, 241);
 }
 
 .login100-form-logo {
@@ -213,13 +215,12 @@ iframe {
 }
 
 .login100-form-title {
-  font-family: Ubuntu-Bold;
+  font-family: Ubuntu-Regular;
   font-size: 28px;
   color: #fff;
   line-height: 1.2;
   text-align: center;
   text-transform: uppercase;
-
   display: block;
 }
 
@@ -249,6 +250,11 @@ iframe {
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
   transition: all 0.4s;
+}
+.result{
+  font-family: Ubuntu-Regular;
+  font-size: 15px;
+  color: #fff;
 }
 
 /*---------------------------------------------*/ 

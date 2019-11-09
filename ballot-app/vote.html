@@ -17,12 +17,24 @@
 <body>
 	
 	<div class="limiter">
-		<div class="container-login100" style="background-image: url('images/bg-01.JPG');">
-			<div class="wrap-login100 p-t-30 p-b-50">
-				<span class="login100-form-title p-b-41">
-					VOTE FOR PREFERENCE
+        <div class="container-login100 flex flex-row" style="background-image: url('images/bg-01.JPG');">
+            <div class="wrap-login100 p-t-30 p-b-50 flex flex-col">
+                <span class="login100-form-title p-b-10">
+                     REGISTER TO VOTE
+                </span>
+                <form class="login100-form p-b-33 p-t-5">
+                    <div class="container-login100-form-btn m-t-32">
+                        <button class="login100-form-btn">
+                            Register
+                        </button>
+                    </div>
+                </form>   
+            </div>
+			<div class="wrap-login100 p-t-10 p-b-10 flex flex-col">
+				<span class="login100-form-title p-b-10">
+					SELECT YOUR PREFERENCE
 				</span>
-				<form class="login100-form validVoteForm validvote p-b-33 p-t-5">
+				<form class="login100-form validVoteForm validvote p-b-33 p-t-5 flex flex-col">
 
 					<div class="flex flex-row">
                         <label class="flex flex-col radioOP" for="1">Candidate 1</label>
@@ -70,21 +82,50 @@
                     </div>
 
 					<div class="container-login100-form-btn m-t-32">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn m-r-28">
 							Submit Vote
 						</button>
-                    </div>
-                    <div class="container-login100-form-btn m-t-32">
 						<button class="login100-form-btn">
 							Abstain
                         </button>
-                        <button class="login100-form-btn">
-							Delegate
-						</button>
 					</div>
 
 				</form>
-			</div>
+            </div>
+            <div class="wrap-login100 p-t-10 p-b-30 flex flex-col">
+                <span class="login100-form-title p-t-10">
+				 DELEGATE YOUR VOTE
+                </span>
+                <div class="container-login100-form-btn m-t-5">
+                    <form class="login100-form p-b-33 p-t-5 flex flex-col" style="align-items: center;">
+                        <div class="flex flex-row">
+                            <label class="flex flex-col m-t-20 p-l-25">Deligate my vote to : </label>
+                            <input class="flex flex-col m-t-15 p-b-10 p-t-10 p-l-25 m-l-20" type="text"/>
+                        </div>
+                        <br>
+                        <div class="flex flex-row p-l-25">
+                            <button class="login100-form-btn p-l-25">
+                                 Delegate
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="wrap-login100 p-t-30 p-b-30 flex flex-col">
+                <span class="login100-form-title p-b-20">
+				 REQUEST FOR WINNER
+                </span>
+                <div class="container-login100-form-btn m-t-5">
+                    <span>
+                        <button class="login100-form-btn">
+                            Show Results
+                        </button>
+                        <br>
+                        <label class="result m-l-20">loading Winner here</label>
+                    </span>
+                   
+                </div>
+            </div>
 		</div>
 	</div>
 	
