@@ -3,34 +3,26 @@ pragma solidity ^0.5.11;
 contract MSRVE_Ballot {
 
     struct Voter {
-
         uint weight;
         bool voted;
-        uint8[] vote;
+        uint256[] vote;
+        uint256[] curList;
+        uint256 preference;
         address delegate;
     }
 
-    struct Proposal {
-        uint256[] vote;
-        // bytes vote;
-    }
-
     address admin;
+    address[] voterList;
     uint256 numProposals;
+    uint256[] runningCount;
+    bool[] invalidCandidates;
     mapping(address => Voter) voters;
-    // Proposal[] proposals;
-    Proposal[][] proposals;
 
-    uint voteCount;
-    uint abstainCount;
+    uint public voteCount;
+    uint public abstainCount;
 
-    // bytes _rankVote;
-
-    uint256[] public _rankVote;
     uint256 public winner;
-    uint256 public cand;
-    uint256[] public voted;
-    bool public calc;
+    bool calc;
 
     enum Phase {Regs, Vote, Done}
 
@@ -40,20 +32,18 @@ contract MSRVE_Ballot {
 
     modifier onlyAdmin() {require(msg.sender == admin, "YOU. SHALL. NOT. PASS!"); _;}
 
-    modifier canVote() {require(voters[msg.sender].voted == false, "Access denied!"); _;}
-
-    event LogEval(bytes32 message, uint256 amount);
+    modifier canVote() {require(voters[msg.sender].voted == false, "No voting for you kiddo!"); _;}
 
     constructor (uint8 num) public  {
 
         admin = msg.sender;
         voters[admin].weight = 1;
-        // check if this can be used for 2D array.
-        proposals.length = num;
         state = Phase.Regs;
         numProposals = num;
+        runningCount.length = num;
+        invalidCandidates.length = num;
         voteCount = 0;
-        // winner = -1;
+        abstainCount = 0;
         calc = false;
     }
 
@@ -71,27 +61,17 @@ contract MSRVE_Ballot {
 
         require(voters[msg.sender].weight > 0, "Register first!");
 
-        address voter = msg.sender;
+        runningCount[inputArray[inputArray.length-1]] += voters[msg.sender].weight;
 
-        voteCount += voters[voter].weight;
-        voters[voter].voted = true;
+        voters[msg.sender].preference = inputArray[inputArray.length-1];
+        voters[msg.sender].vote = inputArray;
+        voters[msg.sender].curList = inputArray;
+        voters[msg.sender].curList.pop();
+        voters[msg.sender].voted = true;
+        voterList.push(msg.sender);
 
-        // bytes memory _tmp = inputArray;
-        // _rankVote = int(inputArray);
+        voteCount++;
 
-        _rankVote = inputArray;
-        voted = inputArray;
-
-        // byte candidate = _rankVote.pop();
-
-        uint256 candidate = uint256(_rankVote[_rankVote.length - 1]);
-        cand = candidate;
-
-        delete _rankVote[_rankVote.length - 1];
-        _rankVote.length = _rankVote.length - 1;
-
-        proposals[candidate].push(Proposal(_rankVote));        // New data type is needed for pushing.
-        voteCount += voters[msg.sender].weight;
     }
 
     function delegatedTo(address to) public canVote validPhase(Phase.Vote) {
@@ -104,7 +84,7 @@ contract MSRVE_Ballot {
             to = voters[to].delegate;
 
         if (to == msg.sender)
-            revert();
+            revert("Delegation DAG");
 
         sender.voted = true;
         sender.delegate = to;
@@ -113,21 +93,21 @@ contract MSRVE_Ballot {
         if (!delegateTo.voted)
             delegateTo.weight += sender.weight;
         else
-            revert();
+            revert("New person already voted!");
     }
 
     function abstain() public canVote validPhase(Phase.Vote) {
 
         voters[msg.sender].voted = true;
-        abstainCount += 1;
+        abstainCount++;
     }
 
     function reqWinner() public validPhase(Phase.Done) returns (uint256 ) {
 
+        require(voterList.length > 0, "No votes!");
+
         if(calc)
             return winner;
-
-        emit LogEval("START-OF-CALC", 0);
 
         for(uint8 recur = 0; recur < numProposals-1; recur += 1){
             // Loop should have a solution in numProposals-1 iterations.
@@ -139,58 +119,36 @@ contract MSRVE_Ballot {
             uint256 lose = 0;
 
             for(uint8 i = 0; i < numProposals; i += 1){
-
-                if(proposals.length == 0) {
-                    emit LogEval("EMPTY-PROP", i);
-                    continue;
-                }
-
-                if(max<proposals[i].length){
-                    max = proposals[i].length;
-                    emit LogEval("NEW-MAX", i);
+                if(max<runningCount[i]) {
+                    max = runningCount[i];
                     win = i;
                 }
-                if(min>proposals[i].length){
-                    min = proposals[i].length;
-                    emit LogEval("NEW-MIN", i);
+                if(min>runningCount[i] && !invalidCandidates[i]) {
+                    min = runningCount[i];
                     lose = i;
                 }
             }
 
-            if(proposals[win].length>voteCount/2){
-                // winningProposal = win;
-                // break;
-                emit LogEval("CHICKEN-DINNER", win);
+            if(max > voteCount / 2) {
                 winner = win;
                 calc = true;
-                return win+1;
+                return winner;
             }
             else {
-                emit LogEval("TIE-BREAKER", lose);
-                Proposal[] memory deleteStack = proposals[lose];
-                for(uint8 j = 0; j < deleteStack.length; j = 1) {
-
-                    // Proposal memory tmp = deleteStack[j];
-                    // _rankVote = bytes(deleteStack[j].vote);
-
-                    _rankVote = deleteStack[j].vote;
-                    uint256 change = _rankVote[_rankVote.length - 1];
-                    delete _rankVote[_rankVote.length - 1];
-                    _rankVote.length = _rankVote.length - 1;
-                    proposals[change].push(Proposal(_rankVote));
-
-                    // byte change = tmp.vote[tmp.vote.length - 1];
-                    // delete tmp.vote[tmp.vote.length - 1];
-                    // tmp.vote.length -= 1;
-
+                invalidCandidates[lose] = true;
+                runningCount[lose] = 0;
+                for(uint8 j = 0; j < voterList.length; j += 1) {
+                    if(voters[voterList[j]].preference == lose){
+                        // recalc
+                        voters[voterList[j]].preference = voters[voterList[j]].curList[voters[voterList[j]].curList.length-1];
+                        voters[voterList[j]].curList.pop();
+                        runningCount[voters[voterList[j]].preference] += 1;
+                    }
                 }
-                delete proposals[lose];
             }
 
+
         }
-        emit LogEval("THIS-IS-THE-END", winner);
         return winner;
-        // return win;
-        // winningProposal = 0;
     }
 }

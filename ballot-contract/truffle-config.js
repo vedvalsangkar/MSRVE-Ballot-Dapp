@@ -48,6 +48,8 @@ module.exports = {
       port: 7545,
       network_id: "*",       // Any network (default: none)
       websockets: true,
+      // gas: 6721975,
+      // gasPrice: 22000000,
     },
 
     // Another network with more advanced options...

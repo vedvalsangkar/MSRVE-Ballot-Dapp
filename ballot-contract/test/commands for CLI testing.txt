@@ -1,0 +1,62 @@
+// var ballot = await MSRVE_Ballot.deployed()
+// var acc = await web3.eth.getAccounts()
+// var ballot = MSRVE_Ballot.deployed()
+// var acc = web3.eth.getAccounts()
+
+// const artifacts = require('../build/contracts/MSRVE_Ballot.json')
+// const contract = require('truffle-contract')
+// const MyContract = contract(artifacts);
+// MyContract.setProvider(web3.currentProvider);
+
+// const ballot = artifacts.require("MSRVE_Ballot").deployed();
+// console.log(Object.keys(ballot));
+// ballot = MyContract.deployed()
+
+module.exports = function(callback) {
+
+    // console.log(artifacts);
+    // console.log(artifacts.require("MSRVE_Ballot"));
+
+    artifacts.require("MSRVE_Ballot").deployed().then(function(ballot){
+        const acc = web3.eth.getAccounts()
+        const admin = acc[9]
+
+        // console.log(ballot);
+
+
+        ballot.register({from:acc[0]})
+        ballot.register({from:acc[1]})
+        ballot.register({from:acc[2]})
+        ballot.register({from:acc[3]})
+        ballot.register({from:acc[4]})
+        ballot.register({from:acc[5]})
+        ballot.register({from:acc[6]})
+        ballot.register({from:acc[7]})
+        ballot.register({from:acc[8]})
+
+        ballot.changeState(1, {from:admin})
+
+        ballot.vote([2, 1, 0, 3], {from:acc[0]})
+        ballot.vote([0, 3, 1, 2], {from:acc[1]})
+        ballot.vote([3, 2, 1, 0], {from:acc[2]})
+        ballot.vote([2, 3, 0, 1], {from:acc[3]})
+        ballot.vote([1, 0, 2, 3], {from:acc[4]})
+        ballot.vote([1, 0, 2, 3], {from:acc[5]})
+        ballot.vote([1, 0, 2, 3], {from:acc[6]})
+        ballot.vote([1, 0, 2, 3], {from:acc[7]})
+        ballot.vote([1, 0, 2, 3], {from:acc[8]})
+        ballot.vote([1, 3, 0, 2], {from:admin})
+
+        ballot.changeState(2, {from:admin})
+
+        ballot.reqWinner({from:acc[0]}).then(function(answer){
+            
+            console.log(answer);
+        });
+
+        // var ans = await ballot.reqWinner.call({from:acc[0]})
+
+        callback();
+    });
+    
+}
