@@ -4,6 +4,7 @@
   "description": "MSRVE Ballout Dapp",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp/issues"
   },
-  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme"
+  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "ganache-cli": "^6.7.0",
+    "nodemon": "^1.19.4",
+    "vanillatoasts": "^1.3.0",
+    "web3": "^1.2.2"
+  }
 }

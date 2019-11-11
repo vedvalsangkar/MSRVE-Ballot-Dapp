@@ -1,0 +1,25 @@
+{
+    "users": {
+        "user1": {
+            "passwd":"user1",
+            "addr":"0x6794cDaf78d3f58CF33058ED6cf093B794967E0f",
+            "key":"2d99bdb3de5a2a1a546b0dc798d7b60e4501a081a3da48588dfe17e423cb62c9"
+        },
+    
+        "user2": {
+            "passwd":"user2",
+            "addr":"0xFD8D4B42Dab6104e7cd5E7ae922ca455D6171521",
+            "key":"1365313154d6336354e50b6080c417a4d1bb2fc03dd97a2b15cf366ba20cf0b7"
+        },
+    
+        "admin": {
+            "passwd":"admin",
+            "addr":"0x279e4eF7f98b9d89Fe54Eec38c063E5205D0B54D",
+            "key":"0e2d38cbf55e927a5c6381e107c8e8a72f006f838bf9962fc61a04bffafe71ca"
+        }
+    }
+
+    
+
+
+}

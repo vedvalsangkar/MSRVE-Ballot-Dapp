@@ -15,6 +15,8 @@ const json = require('../build/contracts/MSRVE_Ballot.json');
 const interface = json['abi'];
 const bytecode = json['bytecode'];
 
+const contractAddress = json['networks']['5777']['address'];
+
 var admin;
 var accounts;
 var ballot;
