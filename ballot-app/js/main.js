@@ -104,24 +104,21 @@ function login() {
     
     var xhr1 = new XMLHttpRequest();
     xhr1.open('POST', 'http://localhost:3000/login', true);
+    // xhr1.open('POST', 'http://196.168.1.186:3000/login', true);
     xhr1.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr1.setRequestHeader('subject', 'CSE526');
     xhr1.send(data);
 
     console.log('fgvtbhjnmk');
-
-    // xhr1.onreadystatechange = () => {
-    //     if(xhr1.responseText) {
-    //         console.log('readystatechange');
-    //         console.log(xhr1.responseText);
-    //     }
-    // }
     
     xhr1.addEventListener('load', (r)=>{
         
         console.log(xhr1.status);
         if(xhr1.status == 200) {
+            if (localStorage.getItem("votePageLoad"))
+                localStorage.removeItem("votePageLoad");
             location.assign('http://localhost:3000/election');
+            // location.assign('http://196.168.1.186:3000/election');
             // res = JSON.parse(xhr1.responseText);
             // console.log(res);
             // var xhr2 = new XMLHttpRequest();
@@ -135,16 +132,20 @@ function login() {
             //     console.log();
             // });
         }
-        else console.log('INCORRECT LOGIN');
+        else {
+            toastr.error("Incorrect Username or Password", "Login failed!");
+            console.log('INCORRECT LOGIN');
+        }
     });
 
 
 }
 
 window.addEventListener("load", function () {
-    var form = document.getElementById("myForm");
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        login();
-    });
+    var form = document.getElementById("loginForm");
+    if(form)
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            login();
+        });
 });

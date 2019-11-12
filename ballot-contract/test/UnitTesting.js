@@ -115,6 +115,69 @@ describe('Maine State Ranked Voting Election', () => {
                 
             });
         });
+
+        describe('Delegation Functions', ()=>{
+
+            it('Delegate to another voter', async ()=>{
+                await ballot.methods.register().send({from:accounts[0]});
+                await ballot.methods.register().send({from:accounts[1]});
+                await ballot.methods.changeState(1).send({from:admin});
+    
+                let pre_vote = await ballot.methods.voteCount().call();
+                await ballot.methods.delegatedTo(accounts[1]).send({from:accounts[0]});
+                await ballot.methods.vote([2, 1, 0, 3]).send({from:accounts[1], gas: '6721975'});   // This fails without gas
+                let post_vote = await ballot.methods.voteCount().call();
+    
+                assert.equal(post_vote - pre_vote, 2, 'Vote counted');
+            });
+
+            it('Delegate FAIL to self', async ()=>{
+                await ballot.methods.register().send({from:accounts[0]});
+                await ballot.methods.changeState(1).send({from:admin});
+    
+                try {
+                    await ballot.methods.delegatedTo(accounts[0]).send({from:accounts[0]});
+                    assert.fail('This should have failed!');
+                }
+                catch (err) {
+                    assert.ok(err, 'Error captured Successfully!');
+                }    
+            });
+
+            it('Delegate FAIL to each other', async ()=>{
+                await ballot.methods.register().send({from:accounts[0]});
+                await ballot.methods.register().send({from:accounts[1]});
+                await ballot.methods.changeState(1).send({from:admin});
+    
+                try {
+                    await ballot.methods.delegatedTo(accounts[1]).send({from:accounts[0]});
+                    await ballot.methods.delegatedTo(accounts[0]).send({from:accounts[1]});
+                    assert.fail('This should have failed!');
+                }
+                catch (err) {
+                    assert.ok(err, 'Error captured Successfully!');
+                }    
+            });
+
+            it('Delegate FAIL in a ring', async ()=>{
+                await ballot.methods.register().send({from:accounts[0]});
+                await ballot.methods.register().send({from:accounts[1]});
+                await ballot.methods.register().send({from:accounts[2]});
+                await ballot.methods.register().send({from:accounts[3]});
+                await ballot.methods.changeState(1).send({from:admin});
+    
+                try {
+                    await ballot.methods.delegatedTo(accounts[1]).send({from:accounts[0]});
+                    await ballot.methods.delegatedTo(accounts[2]).send({from:accounts[1]});
+                    await ballot.methods.delegatedTo(accounts[3]).send({from:accounts[2]});
+                    await ballot.methods.delegatedTo(accounts[0]).send({from:accounts[3]});
+                    assert.fail('This should have failed!');
+                }
+                catch (err) {
+                    assert.ok(err, 'Error captured Successfully!');
+                }  
+            });
+        });
         
         describe('Voting Functions', ()=>{
             it('Abstain', async () => {
@@ -187,7 +250,7 @@ describe('Maine State Ranked Voting Election', () => {
         });
 
         describe('Final Calculation',() => {
-            it('Request Winner', async () => {
+            it('Calculate Winner', async () => {
                 await ballot.methods.register().send({from:accounts[0]});
                 await ballot.methods.changeState(1).send({from:admin});
     
@@ -201,18 +264,35 @@ describe('Maine State Ranked Voting Election', () => {
                 state = await ballot.methods.state().call();
                 assert.equal(state, 2, 'Done state');
     
-                let winner = await ballot.methods.reqWinner().call({from:admin, gas: '6721975'});
+                await ballot.methods.calcWinner().send({from:admin, gas: '6721975'});
+                let winner = await ballot.methods.getWinner().call({from:admin});
     
                 assert.equal(winner, 3, 'Last step!');
             });
     
-            it('Request Winner FAIL without Single Vote', async () => {
+            it('Calculate Winner FAIL without a Single Vote', async () => {
                 await ballot.methods.changeState(2).send({from:admin});
                 state = await ballot.methods.state().call();
                 assert.equal(state, 2, 'Done state');
     
                 try {
-                    let winner = await ballot.methods.reqWinner().call({from:admin, gas: '6721975'});
+                    // let winner = await ballot.methods.calcWinner().call({from:admin, gas: '6721975'});
+                    await ballot.methods.calcWinner().send({from:admin, gas: '6721975'});
+                    assert.fail('Candidate '+winner+' should not have won!');
+                }
+                catch (err) {
+                    assert.ok(err, 'Error captured Successfully!');
+                }
+            });
+
+            it('Calculate Winner FAIL by Non-Admin', async () => {
+                await ballot.methods.changeState(2).send({from:admin});
+                state = await ballot.methods.state().call();
+                assert.equal(state, 2, 'Done state');
+    
+                try {
+                    // let winner = await ballot.methods.calcWinner().call({from:admin, gas: '6721975'});
+                    await ballot.methods.calcWinner().send({from:accounts[0], gas: '6721975'});
                     assert.fail('Candidate '+winner+' should not have won!');
                 }
                 catch (err) {
@@ -275,7 +355,10 @@ describe('Maine State Ranked Voting Election', () => {
             state = await ballot.methods.state().call();
             assert.equal(state, 2, 'Done state');
 
-            let winner = await ballot.methods.reqWinner().call({from:admin, gas: '6721975'});
+            // let winner = await ballot.methods.reqWinner().call({from:admin, gas: '6721975'});
+            
+            await ballot.methods.calcWinner().send({from:admin, gas: '6721975'});
+            let winner = await ballot.methods.getWinner().call({from:admin});
 
             assert.equal(winner, 3, 'Last step!');
 

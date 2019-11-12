@@ -7,13 +7,16 @@
  <!--=======================[Scripts CSS]=======================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 <!--========================[Scripts JS]========================================================-->
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>  
     <script src="js/main.js"></script>
     <script src="js/vote.js"></script>
 <!--============================================================================================-->
 	
 </head>
+<!-- <body onload="notif();"> -->
 <body>
 	
 	<div class="limiter">
@@ -24,7 +27,7 @@
                 </span>
                 <form class="login100-form p-b-33 p-t-5">
                     <div class="container-login100-form-btn m-t-32">
-                        <button class="login100-form-btn">
+                        <button type="button" class="login100-form-btn" onclick="register();">
                             Register
                         </button>
                     </div>
@@ -82,10 +85,10 @@
                     </div>
 
 					<div class="container-login100-form-btn m-t-32">
-						<button class="login100-form-btn m-r-28">
+						<button type="button" class="login100-form-btn m-r-28" onclick="vote();">
 							Submit Vote
 						</button>
-						<button class="login100-form-btn">
+						<button type="button" class="login100-form-btn" onclick="abstain();">
 							Abstain
                         </button>
 					</div>
@@ -100,11 +103,11 @@
                     <form class="login100-form p-b-33 p-t-5 flex flex-col" style="align-items: center;">
                         <div class="flex flex-row">
                             <label class="flex flex-col m-t-20 p-l-25">Deligate my vote to : </label>
-                            <input class="flex flex-col m-t-15 p-b-10 p-t-10 p-l-25 m-l-20" type="text"/>
+                            <input class="flex flex-col m-t-15 p-b-10 p-t-10 p-l-25 m-l-20" type="text" id="delTo"/>
                         </div>
                         <br>
                         <div class="flex flex-row p-l-25">
-                            <button class="login100-form-btn p-l-25">
+                            <button type="button" class="login100-form-btn p-l-25" onclick="delegate();">
                                  Delegate
                             </button>
                         </div>
@@ -117,11 +120,11 @@
                 </span>
                 <div class="container-login100-form-btn m-t-5">
                     <span>
-                        <button class="login100-form-btn">
+                        <button type="button" class="login100-form-btn" onclick="getWinner();">
                             Show Results
                         </button>
                         <br>
-                        <label class="result m-l-20">loading Winner here</label>
+                        <label class="result m-l-20" id="winnerLable">Winner shall appear here</label>
                     </span>
                    
                 </div>

@@ -28,7 +28,7 @@ contract MSRVE_Ballot {
 
     Phase public state;
 
-    modifier validPhase(Phase reqPhase) {require(state <= reqPhase, "Phase is invalid. Contact admin."); _;}
+    modifier validPhase(Phase reqPhase) {require(state == reqPhase, "Phase is invalid. Contact admin."); _;}
 
     modifier onlyAdmin() {require(msg.sender == admin, "YOU. SHALL. NOT. PASS!"); _;}
 
@@ -69,7 +69,8 @@ contract MSRVE_Ballot {
         voters[msg.sender].curList.pop();
         voters[msg.sender].voted = true;
         voterList.push(msg.sender);
-        voteCount++;
+        
+        voteCount += voters[msg.sender].weight;
 
     }
 
@@ -103,12 +104,14 @@ contract MSRVE_Ballot {
         abstainCount++;
     }
 
-    function reqWinner() public validPhase(Phase.Done) returns (uint256 ) {
+    // function calcWinner() public validPhase(Phase.Done) returns (uint256 ) {
+    function calcWinner() public onlyAdmin validPhase(Phase.Done) {
 
         require(voterList.length > 0, "No votes!");
+        require(!calc, "Winner already calculated!");
 
-        if(calc)
-            return winner;
+        // if(calc)
+        //     return winner;
 
         for(uint8 recur = 0; recur < numProposals-1; recur += 1){
             // Loop should have a solution in numProposals-1 iterations.
@@ -133,7 +136,7 @@ contract MSRVE_Ballot {
             if(max > voteCount / 2) {
                 winner = win;
                 calc = true;
-                return winner;
+                return;
             }
             else {
                 invalidCandidates[lose] = true;
@@ -151,6 +154,11 @@ contract MSRVE_Ballot {
 
 
         }
+        // return winner;
+    }
+
+    function getWinner() public view validPhase(Phase.Done) returns (uint256) {
+        require(calc, "Winner not calculated!");
         return winner;
     }
 }

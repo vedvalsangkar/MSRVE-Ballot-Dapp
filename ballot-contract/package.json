@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "MSRVE Ballout Dapp",
   "main": "index.js",
+  "scripts": {
+    "start": "truffle compile && truffle migrate --reset",
+    "test": "truffle compile && truffle test"
+  },
   "keywords": [
     "blockchain",
     "CSE526"

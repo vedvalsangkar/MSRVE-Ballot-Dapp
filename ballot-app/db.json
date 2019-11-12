@@ -11,6 +11,12 @@
             "addr":"0xFD8D4B42Dab6104e7cd5E7ae922ca455D6171521",
             "key":"1365313154d6336354e50b6080c417a4d1bb2fc03dd97a2b15cf366ba20cf0b7"
         },
+
+        "user3": {
+            "passwd":"user3",
+            "addr":"0x95913bFac42a22e20f411B6a6EBBDda8cF65F025",
+            "key":"5098086b3a8575aa31111dac207f305a32cc9f20f9a33a4e78056dcd9ff5d447"
+        },
     
         "admin": {
             "passwd":"admin",

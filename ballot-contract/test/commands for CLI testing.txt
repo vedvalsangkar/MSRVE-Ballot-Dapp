@@ -1,3 +1,18 @@
+//***************************************************************************************************************
+//***************************************************************************************************************
+//          Most common:
+//***************************************************************************************************************
+
+var ballot = await MSRVE_Ballot.deployed()
+var acc = await web3.eth.getAccounts()
+const admin = acc[9]
+ballot.changeState(1, {from:admin})
+ballot.changeState(2, {from:admin})
+ballot.calcWinner({from:admin})
+
+//***************************************************************************************************************
+//***************************************************************************************************************
+
 // var ballot = await MSRVE_Ballot.deployed()
 // var acc = await web3.eth.getAccounts()
 // var ballot = MSRVE_Ballot.deployed()
@@ -7,6 +22,7 @@
 // const contract = require('truffle-contract')
 // const MyContract = contract(artifacts);
 // MyContract.setProvider(web3.currentProvider);
+// var ballot = await MSRVE_Ballot.at('0x833293D90C98B47cCe38ac435cB5396a4cE0E29e')
 
 // const ballot = artifacts.require("MSRVE_Ballot").deployed();
 // console.log(Object.keys(ballot));
