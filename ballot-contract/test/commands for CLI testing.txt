@@ -5,7 +5,7 @@
 
 var ballot = await MSRVE_Ballot.deployed()
 var acc = await web3.eth.getAccounts()
-const admin = acc[9]
+var admin = acc[9]
 ballot.changeState(1, {from:admin})
 ballot.changeState(2, {from:admin})
 ballot.calcWinner({from:admin})

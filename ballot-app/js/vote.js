@@ -34,7 +34,7 @@ $('.validVoteForm').on('submit',function(){
     
 // }
 
-var g_hostIP = 'localhost';
+// var serverIP = 'localhost';
 
 
 window.addEventListener("load", function () {
@@ -48,7 +48,7 @@ window.addEventListener("load", function () {
 function register() {
     console.log('Registering');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/register', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/register', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     // xhr.open('POST', 'http://196.168.1.186/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -77,7 +77,7 @@ function register() {
 function abstain() {
     console.log('Abstaining');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/abstain', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/abstain', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send();
@@ -109,7 +109,7 @@ function delegate() {
 
     console.log('Delegating');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/delegate', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/delegate', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send(data);
@@ -144,7 +144,7 @@ function changeState() {
 
     console.log('Changing State');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/delegate', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/delegate', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send(data);
@@ -170,7 +170,7 @@ function changeState() {
 function getWinner() {
     console.log('Getting winner');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/winner', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/winner', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send();
@@ -200,7 +200,7 @@ function getWinner() {
 function calculateWinner() {
     console.log('Getting winner');
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+g_hostIP+':3000/winner', true);
+    xhr.open('POST', 'http://'+serverIP+':3000/winner', true);
     // xhr.open('POST', 'http://localhost:3000/register', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send();
@@ -251,7 +251,7 @@ function vote() {
         let data = JSON.stringify({'vote':answer});
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://'+g_hostIP+':3000/vote', true);
+        xhr.open('POST', 'http://'+serverIP+':3000/vote', true);
         // xhr.open('POST', 'http://localhost:3000/register', true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send(data);
@@ -263,7 +263,7 @@ function vote() {
             console.log(resp);
             if(resp.Hash) {
                 // toastr.success("Hash Generated: "+(!!resp.Hash)?:resp.Reciept.transactionHash);
-                toastr.success("Hash Generated: "+resp.Hash, "Abstained successfully!");
+                toastr.success("Hash Generated: "+resp.Hash, "Voted successfully!");
             }
             else if(resp.Error || resp.ErrorCatch) {
                 // toastr.success("Hash Generated: "+(!!resp.Hash)?:resp.Reciept.transactionHash);
@@ -271,7 +271,7 @@ function vote() {
                     toastr.error('You seem to have cast your vote already.', "Cannot Vote!");
                 else if(resp.Error.includes('Phase is invalid. Contact admin'))
                     toastr.error('Voting stage has passed or not yet active. You cannot vote right now.', "Cannot Vote!");
-                else toastr.error(resp.Error, "Abstain failed!");
+                else toastr.error(resp.Error, "Vote failed!");
             }
         });
     }

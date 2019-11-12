@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "MSRVE Ballout Dapp",
   "main": "index.js",
+  "man": "./man/msrve.1",
   "scripts": {
-    "start": "cd ../ballot-contract && truffle migrate --reset && cd ../ballot-app && nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cd ../ballot-contract && npm start  && cd ../ballot-app && ./ip.sh && nodemon server.js",
+    "test": "cd ../ballot-contract && npm test",
+    "doc": "cat ./man/msrve.1"
   },
   "repository": {
     "type": "git",

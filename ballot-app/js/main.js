@@ -87,13 +87,8 @@
         
     });
 
-
 })(jQuery);
-// "user1": {
-//     "passwd":"user1",
-//     "addr":"0x6794cDaf78d3f58CF33058ED6cf093B794967E0f",
-//     "key":"2d99bdb3de5a2a1a546b0dc798d7b60e4501a081a3da48588dfe17e423cb62c9"
-// };
+
 function login() {
     var user = document.getElementById('username').value;
     var pass = document.getElementById('pass').value;
@@ -103,8 +98,8 @@ function login() {
     var data = JSON.stringify({'user': user, 'pass': pass});
     
     var xhr1 = new XMLHttpRequest();
-    xhr1.open('POST', 'http://localhost:3000/login', true);
-    // xhr1.open('POST', 'http://196.168.1.186:3000/login', true);
+    // xhr1.open('POST', 'http://localhost:3000/login', true);
+    xhr1.open('POST', 'http://'+serverIP+':3000/login', true);
     xhr1.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr1.setRequestHeader('subject', 'CSE526');
     xhr1.send(data);
@@ -117,8 +112,8 @@ function login() {
         if(xhr1.status == 200) {
             if (localStorage.getItem("votePageLoad"))
                 localStorage.removeItem("votePageLoad");
-            location.assign('http://localhost:3000/election');
-            // location.assign('http://196.168.1.186:3000/election');
+            // location.assign('http://localhost:3000/election');
+            location.assign('http://'+serverIP+':3000/election');
             // res = JSON.parse(xhr1.responseText);
             // console.log(res);
             // var xhr2 = new XMLHttpRequest();
@@ -142,6 +137,7 @@ function login() {
 }
 
 window.addEventListener("load", function () {
+    // console.log('serverIP:', serverIP);
     var form = document.getElementById("loginForm");
     if(form)
         form.addEventListener("submit", function (event) {

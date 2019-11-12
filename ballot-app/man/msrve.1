@@ -1,0 +1,16 @@
+Commands:
+
+  npm start ->
+    cd ../ballot-contract && npm start  && cd ../ballot-app && ./ip.sh && nodemon server.js
+
+    Triggers compiling and migration of the smart contract from the adjectent folder and
+    then start Node.JS server using nodemon package for auto restart. 'ip.sh' queries and
+    creates a js file with the current ip address of the server machine.
+
+  npm test ->
+    cd ../ballot-contract && npm test
+
+    Triggers the testing of the smart contract from the adjectent directory. Included only
+    for convenience.
+
+

@@ -69,7 +69,7 @@ contract MSRVE_Ballot {
         voters[msg.sender].curList.pop();
         voters[msg.sender].voted = true;
         voterList.push(msg.sender);
-        
+
         voteCount += voters[msg.sender].weight;
 
     }

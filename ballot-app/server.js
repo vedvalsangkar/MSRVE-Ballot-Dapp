@@ -39,6 +39,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.use(function (req, res, next) {        
+    res.setHeader('Access-Control-Allow-Origin', '*');    
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');    
+    // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');      
+    res.setHeader('Access-Control-Allow-Headers', '*');      
+    // res.setHeader('Access-Control-Allow-Credentials', true);       
+    next();  
+}); 
+
 app.set('views', __dirname);
 app.set('view engine', 'html'); 
 
@@ -54,12 +63,10 @@ app.post('/login', function (req, res) {
     curUser = db.users[user];
 
     if(curUser.passwd == pass) {
-        // res.redirect('landing');
-        // res.redirect('https://www.google.co.in/');
-        // res.render('/landing');
-        // res.redirect('http://localhost:3000/landing');
-        // res.sendFile('vote.html',{root:__dirname});
-        // console.log(req.headers);
+
+        res.clearCookie('user');
+        res.clearCookie('addr');
+        res.clearCookie('subject');
 
         res.cookie('user', user, {maxAge: 3600000});
         res.cookie('addr', curUser.addr, {maxAge: 3600000});
@@ -275,35 +282,6 @@ app.post('/calcWinner', (req, res) => {
 });
 
 app.post('/winner', (req, res) => {
-    // ballot.methods.getWinner().call({from:req.cookies.addr, gas: '6721975'})
-    //     .on('error', (err, rec) => {
-    //         console.log('WINNER ON ERROR');
-    //         console.log(err);
-    //         // res.write();
-    //         // res.status(200).send({'Reciept': rec, 'Error':err, });
-    //         res.write(JSON.stringify({'RecieptOnError': JSON.stringify(rec), 'Error':err.toString() }));
-    //     })
-    //     .on('transactionHash', (hash) => {
-    //         console.log('WINNER ON HASH');
-    //         console.log(hash);
-    //         res.write(JSON.stringify({'Hash': hash}));
-    //     })
-    //     .then((err, WinningCandidate)=>{
-    //         console.log('WINNER ON COMPLETION');
-    //         console.log(err);
-    //         console.log(WinningCandidate);
-    //         res.write(JSON.stringify({'Winner': JSON.stringify(WinningCandidate)}));
-    //         res.end();
-    //         // res.send({'Reciept': rec});
-    //     })
-    //     // .then(console.log)
-    //     .catch((err2)=>{
-    //         console.log("WINNER ERROR IN CATCH\n");
-    //         console.log(err2);
-    //         res.status(200).write(JSON.stringify({'ErrorCatch':err2.toString()}));
-    //         res.end();
-    //     })
-    //     ;
 
     ballot.methods.getWinner().call({from:req.cookies.addr, gas: '6721975'})
         .then((WinningCandidate)=>{
