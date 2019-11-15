@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme",
   "dependencies": {
-    "express": "^4.17.1",
     "ganache-cli": "^6.7.0",
     "mocha": "^6.2.2",
     "truffle": "^5.0.42",

@@ -7,7 +7,9 @@ var cookieParser = require('cookie-parser');
 
 var db = require("./db.json");
 
-const ganache = require('ganache-cli');
+var IP = require("./ip.json");
+
+//const ganache = require('ganache-cli');
 const Web3 = require('web3');
 // const web3 = new Web3(ganache.provider());
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
@@ -25,12 +27,13 @@ var ballot;
 function startup() {
     // blockchain startup
     web3.eth.getAccounts().then((accs)=>{
-        console.log('ACCOUNTS: ', accs);
+        //console.log('ACCOUNTS: ', accs);
         accounts = accs ;
         admin = accounts[9];
     });
     ballot = new web3.eth.Contract(interface, contractAddress);
-    console.log('Server started');
+    console.log('\nServer started. Go to http://'+IP.serverIP+':3000\n');
+    //console.log(serverIP);
 }
 
 app.use(bodyParser.json());

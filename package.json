@@ -5,10 +5,10 @@
   "main": "index.js",
   "man": "./man/msrve.1",
   "scripts": {
-    "start": "./ip.sh && nodemon server.js",
-    "demo": "cd ../ballot-contract && npm start  && cd ../ballot-app && ./ip.sh && nodemon server.js",
+    "start": "cd ballot-app && npm start",
+    "demo": "cd ballot-app && npm run demo",
     "test": "cd ../ballot-contract && npm test",
-    "doc": "cat ./man/msrve.1"
+    "setup": "cd ballot-app && npm install && cd ../ballot-contract && npm install"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,5 @@
   "bugs": {
     "url": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp/issues"
   },
-  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme",
-  "dependencies": {
-    "cookie-parser": "^1.4.4",
-    "express": "^4.17.1",
-    "nodemon": "^1.19.4",
-    "web3": "^1.2.2"
-  }
+  "homepage": "https://github.com/vedvalsangkar/MSRVE-Ballot-Dapp#readme"
 }
