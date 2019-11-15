@@ -3,7 +3,7 @@ var app = express();
 var router = express.Router();  
 var bodyParser = require("body-parser");
 var path = require('path');
-var cookieParser = require('cookie-parser') // TODO: Implement cookies for user management.
+var cookieParser = require('cookie-parser');
 
 var db = require("./db.json");
 
@@ -109,14 +109,8 @@ app.post('/register', (req, res) => {
     if(!user) {
         console.log('NO USER FOUND!');
         user = 'user1';
-        // res.status(403).send({'Error':'No user'});
+        res.status(403).send({'Error':'No user'});
     }
-
-    // try {
-    //     await ballot.methods.register().send({from:userList[user].addr});
-    // } catch (err) {
-    //     console.log(err);
-    // }
 
     ballot.methods.register().send({from:req.cookies.addr})
         .on('error', (err, rec) => {

@@ -89,6 +89,8 @@
 
 })(jQuery);
 
+//////////////////// LOGIN ////////////////////////////////////////////////////////////////////////////////////
+
 function login() {
     var user = document.getElementById('username').value;
     var pass = document.getElementById('pass').value;
@@ -104,7 +106,7 @@ function login() {
     xhr1.setRequestHeader('subject', 'CSE526');
     xhr1.send(data);
 
-    console.log('fgvtbhjnmk');
+    console.log('request Sent! ');
     
     xhr1.addEventListener('load', (r)=>{
         
@@ -114,26 +116,12 @@ function login() {
                 localStorage.removeItem("votePageLoad");
             // location.assign('http://localhost:3000/election');
             location.assign('http://'+serverIP+':3000/election');
-            // res = JSON.parse(xhr1.responseText);
-            // console.log(res);
-            // var xhr2 = new XMLHttpRequest();
-            // xhr2.open('GET', 'http://localhost:3000/election', true);
-            // xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-            // xhr2.setRequestHeader('subject', 'CSE526');
-            // xhr2.send();
-            // xhr2.addEventListener('load', (r)=>{
-            //     // console.log(xhr2.responseText);
-            //     document.write(xhr2.responseText);
-            //     console.log();
-            // });
         }
         else {
             toastr.error("Incorrect Username or Password", "Login failed!");
             console.log('INCORRECT LOGIN');
         }
     });
-
-
 }
 
 window.addEventListener("load", function () {
